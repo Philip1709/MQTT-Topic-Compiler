@@ -44,10 +44,7 @@ jobs:
     
         cd ..
         
-        # Mosquitto headers holen
         git clone https://github.com/eclipse/mosquitto.git
-        
-        # cJSON headers holen
         git clone https://github.com/DaveGamble/cJSON.git
     
         cd $SDK_DIR
@@ -57,6 +54,7 @@ jobs:
           -I../mosquitto/include \
           -I../mosquitto/lib \
           -I../cJSON \
+          -I../cJSON/cJSON \
           -o rewrite_topic.so \
           ../rewrite_topic_plugin.c
         
