@@ -25,8 +25,9 @@ static int rewrite_topic_callback(int event, void *event_data, void *userdata)
 
         printf("Rewriting topic: %s -> %s\n", orig_topic, new_topic);
 
-        free(ed->topic);
-        ed->topic = strdup(new_topic);
+        if(ed->topic){
+            ed->topic = mosquitto_strdup(new_topic);
+        }
     }
 
     return MOSQ_ERR_SUCCESS;
