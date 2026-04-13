@@ -16,8 +16,9 @@ jobs:
           build-essential \
           wget \
           python3 \
-          python3-distutils \
+          python3-pip \
           python3-setuptools \
+          python3-distutils \
           rsync \
           file \
           unzip \
@@ -26,6 +27,8 @@ jobs:
           libncurses5-dev \
           zlib1g-dev \
           libssl-dev
+
+        python3 -m pip install setuptools
 
     - name: Download SDK
       run: |
@@ -41,7 +44,7 @@ jobs:
         ./scripts/feeds install mosquitto
     
         make defconfig
-        make package/mosquitto/{clean,compile} V=s
+        make package/mosquitto/{clean,compile} V=s FORCE=1
         - name: Build
           run: |
             cd $(ls -d openwrt-sdk-* | head -n 1)
