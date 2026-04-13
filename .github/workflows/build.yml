@@ -16,17 +16,27 @@ jobs:
       run: |
         wget https://downloads.openwrt.org/releases/21.02.0/targets/ramips/mt76x8/openwrt-sdk-21.02.0-ramips-mt76x8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         tar -xf openwrt-sdk-*.tar.xz
-
-    - name: Build
+    
+    - name: Prepare Mosquitto
       run: |
-        cd $(ls -d openwrt-sdk-* | head -n 1)
-        STAGING_DIR=$(pwd)/staging_dir
-
-        $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
-          -fPIC -shared \
-          -I$STAGING_DIR/target-mipsel_24kc_musl/usr/include \
-          -o rewrite_topic.so \
-          ../rewrite_topic_plugin.c
+        SDK_DIR=$(ls -d openwrt-sdk-* | head -n 1)
+        cd $SDK_DIR
+    
+        ./scripts/feeds update -a
+        ./scripts/feeds install mosquitto
+    
+        make defconfig
+        make package/mosquitto/{clean,compile} V=s
+        - name: Build
+          run: |
+            cd $(ls -d openwrt-sdk-* | head -n 1)
+            STAGING_DIR=$(pwd)/staging_dir
+    
+            $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
+              -fPIC -shared \
+              -I$STAGING_DIR/target-mipsel_24kc_musl/usr/include \
+              -o rewrite_topic.so \
+              ../rewrite_topic_plugin.c
 
     - name: Upload
       uses: actions/upload-artifact@v4
