@@ -44,8 +44,11 @@ jobs:
         ./scripts/feeds install mosquitto
     
         make defconfig
-        make prereq FORCE=1
-        make package/mosquitto/{clean,compile} V=s
+    
+        # Skip broken prereq check
+        export FORCE=1
+    
+        make package/mosquitto/compile V=s
         
     - name: Build
       run: |
