@@ -44,17 +44,19 @@ jobs:
         ./scripts/feeds install mosquitto
     
         make defconfig
-        make package/mosquitto/{clean,compile} V=s FORCE=1
-        - name: Build
-          run: |
-            cd $(ls -d openwrt-sdk-* | head -n 1)
-            STAGING_DIR=$(pwd)/staging_dir
-    
-            $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
-              -fPIC -shared \
-              -I$STAGING_DIR/target-mipsel_24kc_musl/usr/include \
-              -o rewrite_topic.so \
-              ../rewrite_topic_plugin.c
+        make prereq FORCE=1
+        make package/mosquitto/{clean,compile} V=s
+        
+    - name: Build
+      run: |
+        cd $(ls -d openwrt-sdk-* | head -n 1)
+        STAGING_DIR=$(pwd)/staging_dir
+
+        $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
+          -fPIC -shared \
+          -I$STAGING_DIR/target-mipsel_24kc_musl/usr/include \
+          -o rewrite_topic.so \
+          ../rewrite_topic_plugin.c
 
     - name: Upload
       uses: actions/upload-artifact@v4
