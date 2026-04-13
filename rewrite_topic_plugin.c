@@ -41,7 +41,7 @@ int mosquitto_plugin_version(int supported_version_count, const int *supported_v
 
 int mosquitto_plugin_init(mosquitto_plugin_id_t *identifier, void **userdata, struct mosquitto_opt *opts, int opt_count)
 {
-    mosquitto_callback_register(identifier, MOSQ_EVT_MESSAGE, rewrite_topic_callback, NULL, NULL);
+    mosquitto_callback_register(identifier, MOSQ_EVT_MESSAGE_IN, rewrite_topic_callback, NULL, NULL);
     return MOSQ_ERR_SUCCESS;
 }
 
