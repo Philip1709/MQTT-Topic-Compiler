@@ -47,6 +47,10 @@ jobs:
         git clone https://github.com/eclipse/mosquitto.git
         git clone https://github.com/DaveGamble/cJSON.git
     
+        # FIX: richtige include struktur herstellen
+        mkdir -p cJSON/cjson
+        cp cJSON/cJSON.h cJSON/cjson/
+    
         cd $SDK_DIR
     
         $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
@@ -54,7 +58,6 @@ jobs:
           -I../mosquitto/include \
           -I../mosquitto/lib \
           -I../cJSON \
-          -I../cJSON/cJSON \
           -o rewrite_topic.so \
           ../rewrite_topic_plugin.c
         
