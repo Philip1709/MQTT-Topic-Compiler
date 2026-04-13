@@ -48,7 +48,7 @@ jobs:
         # Skip broken prereq check
         export FORCE=1
     
-        make package/mosquitto/compile V=s
+        make package/mosquitto/compile V=s FORCE=1
         
     - name: Build
       run: |
