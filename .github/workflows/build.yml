@@ -34,7 +34,7 @@ jobs:
       run: |
         wget https://downloads.openwrt.org/releases/21.02.0/targets/ramips/mt76x8/openwrt-sdk-21.02.0-ramips-mt76x8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         tar -xf openwrt-sdk-*.tar.xz
-        
+
     - name: Build
       run: |
         SDK_DIR=$(ls -d openwrt-sdk-* | head -n 1)
@@ -42,21 +42,24 @@ jobs:
     
         STAGING_DIR=$(pwd)/staging_dir
     
-        # Mosquitto source holen (nur Header nötig)
         cd ..
+        
+        # Mosquitto headers holen
         git clone https://github.com/eclipse/mosquitto.git
-        cd mosquitto
+        
+        # cJSON headers holen
+        git clone https://github.com/DaveGamble/cJSON.git
     
-        # zurück zum SDK
-        cd ../$SDK_DIR
+        cd $SDK_DIR
     
         $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
           -fPIC -shared \
           -I../mosquitto/include \
           -I../mosquitto/lib \
+          -I../cJSON \
           -o rewrite_topic.so \
           ../rewrite_topic_plugin.c
-
+        
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
