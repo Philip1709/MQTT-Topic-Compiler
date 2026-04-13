@@ -42,12 +42,18 @@ jobs:
     
         STAGING_DIR=$(pwd)/staging_dir
     
-        # include path für mosquitto headers fixen
-        INCLUDE_PATH=$(find $STAGING_DIR -type d -name "include" | head -n 1)
+        # Mosquitto source holen (nur Header nötig)
+        cd ..
+        git clone https://github.com/eclipse/mosquitto.git
+        cd mosquitto
+    
+        # zurück zum SDK
+        cd ../$SDK_DIR
     
         $STAGING_DIR/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-musl-gcc \
           -fPIC -shared \
-          -I$INCLUDE_PATH \
+          -I../mosquitto/include \
+          -I../mosquitto/lib \
           -o rewrite_topic.so \
           ../rewrite_topic_plugin.c
 
